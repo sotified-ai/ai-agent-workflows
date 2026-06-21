@@ -1,0 +1,84 @@
+# ─────────────────────────────────────────────────────────────────────────
+# QA Agent Factory — Project Knowledge Base Configuration
+# ─────────────────────────────────────────────────────────────────────────
+# This file defines which knowledge sources are available for this project,
+# how documents should be chunked, and which embedding model to use.
+# Place source documents in the corresponding sources/<type>/ sub-folder.
+# ─────────────────────────────────────────────────────────────────────────
+
+project_id: sample_project
+project_name: Sample QA Project
+description: Demonstration project for the QA Agent Factory knowledge base pipeline.
+
+# ── Knowledge Source Types ───────────────────────────────────────────────
+# enabled: true  → actively ingested and retrievable
+# enabled: false → placeholder for future implementation
+knowledge_sources:
+
+  # ── ACTIVE source types (fully implemented) ────────────────────────────
+  user_stories:
+    enabled: true
+    description: "User Stories & Acceptance Criteria"
+    path: sources/user_stories
+
+  api_specs:
+    enabled: true
+    description: "API Specifications (OpenAPI / Swagger)"
+    path: sources/api_specs
+
+  existing_test_cases_defects:
+    enabled: true
+    description: "Existing Test Cases & Defects"
+    path: sources/existing_test_cases_defects
+
+  # ── PLACEHOLDER source types (not yet implemented) ─────────────────────
+  brd:
+    enabled: false
+    description: "Business Requirements Document"
+    path: sources/brd
+
+  prd:
+    enabled: false
+    description: "Product Requirements Document"
+    path: sources/prd
+
+  compliance:
+    enabled: false
+    description: "Compliance & Regulatory Docs"
+    path: sources/compliance
+
+  release_notes:
+    enabled: false
+    description: "Release Notes"
+    path: sources/release_notes
+
+  sop:
+    enabled: false
+    description: "Standard Operating Procedures"
+    path: sources/sop
+
+  role_matrix:
+    enabled: false
+    description: "Role & Permission Matrix"
+    path: sources/role_matrix
+
+  ui_notes:
+    enabled: false
+    description: "UI / UX Design Notes"
+    path: sources/ui_notes
+
+# ── Chunking Settings ────────────────────────────────────────────────────
+chunking:
+  chunk_size: 512
+  overlap: 64
+
+# ── Embedding Settings ───────────────────────────────────────────────────
+embeddings:
+  model: all-MiniLM-L6-v2
+  dimension: 384
+  local_only: true
+
+# ── Retrieval Settings ───────────────────────────────────────────────────
+retrieval:
+  top_k: 10
+  min_confidence: 0.25
