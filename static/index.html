@@ -3,19 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QA Agent Factory</title>
-  <meta name="description" content="Enterprise-grade, privacy-safe AI test case generation platform">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <title>QA Agent Factory — Unified Enterprise Suite</title>
+  <meta name="description" content="Enterprise-grade, privacy-safe AI test case generation platform and interactive specs simulator.">
+  <link rel="stylesheet" href="/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="/fonts.css">
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
 
-<!-- ── Header ─────────────────────────────────────────────────────────────── -->
-<header class="header">
-  <div class="header-inner">
-    <div class="brand">
+<div class="app-layout">
+  <!-- ── Sidebar Navigation ────────────────────────────────────────────────── -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
       <div class="brand-icon">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
@@ -23,238 +22,660 @@
       </div>
       <div>
         <div class="brand-name">QA Agent Factory</div>
-        <div class="brand-sub">Enterprise Test Automation Platform</div>
+        <div class="brand-sub">Enterprise Core v2.0</div>
       </div>
     </div>
-    <div class="header-status">
-      <span class="status-dot" id="llm-dot"></span>
-      <span class="status-label" id="llm-label">Checking LLM...</span>
-    </div>
-  </div>
-</header>
 
-<!-- ── Main Layout ─────────────────────────────────────────────────────────── -->
-<main class="main">
-
-  <!-- ── Step Indicator ──────────────────────────────────────────────────── -->
-  <div class="steps-bar">
-    <div class="step active" id="step-ind-1">
-      <div class="step-num">1</div>
-      <div class="step-label">Create Project</div>
-    </div>
-    <div class="step-connector"></div>
-    <div class="step" id="step-ind-2">
-      <div class="step-num">2</div>
-      <div class="step-label">Upload Files</div>
-    </div>
-    <div class="step-connector"></div>
-    <div class="step" id="step-ind-3">
-      <div class="step-num">3</div>
-      <div class="step-label">Generate Tests</div>
-    </div>
-    <div class="step-connector"></div>
-    <div class="step" id="step-ind-4">
-      <div class="step-num">4</div>
-      <div class="step-label">Download</div>
-    </div>
-  </div>
-
-  <!-- ── Content Area ────────────────────────────────────────────────────── -->
-  <div class="content">
-
-    <!-- Step 1: Create / Select Project -->
-    <section class="card step-panel active" id="panel-1">
-      <div class="card-header">
-        <h2 class="card-title">Projects</h2>
-        <p class="card-sub">Create a new project or select an existing one to continue.</p>
-      </div>
-
-      <!-- Create form -->
-      <div class="form-group">
-        <label class="label">Project Name</label>
-        <input id="proj-name" class="input" type="text" placeholder="e.g. MFA Login Feature" autocomplete="off">
-      </div>
-      <div class="form-group">
-        <label class="label">Description <span class="muted">(optional)</span></label>
-        <input id="proj-desc" class="input" type="text" placeholder="Brief description of this project">
-      </div>
-      <button class="btn btn-primary" id="btn-create-project" onclick="createProject()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Create Project
+    <nav class="sidebar-nav">
+      <button id="nav-btn-workspace" class="nav-item active" onclick="switchView('workspace')">
+        <i class="bi bi-cpu"></i>
+        <span>Workspace Console</span>
       </button>
-
-      <!-- Existing projects -->
-      <div class="divider"><span>or select existing</span></div>
-      <div id="projects-list" class="project-list">
-        <div class="empty-state">Loading projects...</div>
-      </div>
-    </section>
-
-    <!-- Step 2: Upload Files -->
-    <section class="card step-panel" id="panel-2">
-      <div class="card-header">
-        <div>
-          <h2 class="card-title">Upload Project Files</h2>
-          <p class="card-sub">Upload your requirements, API specs, or existing test cases. Files are automatically ingested into the knowledge base.</p>
-        </div>
-        <span class="badge badge-teal" id="active-project-badge">—</span>
-      </div>
-
-      <!-- Drop zone -->
-      <div class="dropzone" id="dropzone" ondrop="handleDrop(event)" ondragover="handleDragover(event)" ondragleave="handleDragleave(event)">
-        <div class="dropzone-inner">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="drop-icon">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-            <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
-          </svg>
-          <p class="drop-text">Drop files here or <label class="file-link" for="file-input">browse</label></p>
-          <p class="drop-hint">Supports: .md, .txt, .yaml, .yml, .json — Auto-detected as User Stories, API Specs, or Test Cases</p>
-          <input type="file" id="file-input" multiple accept=".md,.txt,.yaml,.yml,.json" style="display:none" onchange="handleFileSelect(event)">
-        </div>
-      </div>
-
-      <!-- Upload status -->
-      <div id="upload-log" class="log-box" style="display:none"></div>
-
-      <!-- Uploaded files list -->
-      <div id="files-section" style="display:none">
-        <h3 class="section-title">Uploaded Files</h3>
-        <div id="files-list" class="files-grid"></div>
-      </div>
-
-      <div class="step-nav">
-        <button class="btn btn-ghost" onclick="goStep(1)">← Back</button>
-        <button class="btn btn-primary" onclick="goStep(3)">Continue → Generate</button>
-      </div>
-    </section>
-
-    <!-- Step 3: Generate Test Cases -->
-    <section class="card step-panel" id="panel-3">
-      <div class="card-header">
-        <div>
-          <h2 class="card-title">Generate Test Cases</h2>
-          <p class="card-sub">Describe the feature or user story. The AI will automatically retrieve context, generate scenarios, write test cases, run QA review, and compute traceability.</p>
-        </div>
-        <span class="badge badge-teal" id="gen-project-badge">—</span>
-      </div>
-
-      <div class="form-group">
-        <label class="label">Story / Feature Title</label>
-        <input id="story-title" class="input" type="text" placeholder="e.g. Multi-Factor Authentication Login Flow">
-      </div>
-      <div class="form-group">
-        <label class="label">Description &amp; Scope</label>
-        <textarea id="story-desc" class="input textarea" rows="5" placeholder="Describe the feature in detail. Include key flows, business rules, security requirements, and compliance standards (SOC2, HIPAA, etc.)..."></textarea>
-      </div>
-      <div class="form-group">
-        <label class="label">Compliance Targets <span class="muted">(comma-separated, optional)</span></label>
-        <input id="compliance-targets" class="input" type="text" placeholder="e.g. SOC2-CC6.1, ISO27001-A.9.4.2, OWASP-ASVS">
-      </div>
-
-      <button class="btn btn-primary btn-large" id="btn-generate" onclick="generateTests()">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        Generate Test Cases
+      <button id="nav-btn-blueprint" class="nav-item" onclick="switchView('blueprint')">
+        <i class="bi bi-journal-text"></i>
+        <span>Architecture Blueprint</span>
       </button>
+      <button id="nav-btn-simulator" class="nav-item" onclick="switchView('simulator')">
+        <i class="bi bi-play-circle"></i>
+        <span>Interactive Simulator</span>
+      </button>
+      <button id="nav-btn-code" class="nav-item" onclick="switchView('code')">
+        <i class="bi bi-folder-symlink"></i>
+        <span>Prototype Code Browser</span>
+      </button>
+      <button id="nav-btn-kb" class="nav-item" onclick="switchView('kb')">
+        <i class="bi bi-database-fill-gear"></i>
+        <span>Knowledge Base Explorer</span>
+      </button>
+    </nav>
 
-      <!-- Pipeline progress -->
-      <div id="pipeline-progress" style="display:none">
-        <div class="progress-header">
-          <span class="progress-title">Running Pipeline...</span>
-          <span class="progress-sub" id="pipeline-step-label">Initializing</span>
+    <div class="sidebar-footer">
+      <div class="connection-status">
+        <span class="status-dot" id="llm-dot"></span>
+        <span class="status-label" id="llm-label">Checking LLM...</span>
+      </div>
+      <div class="security-badge">
+        <i class="bi bi-shield-check-fill"></i>
+        <span>Secure Sandboxed</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── Main Content Area ────────────────────────────────────────────────── -->
+  <main class="main-content">
+
+    <!-- ── VIEW 1: WORKSPACE CONSOLE ────────────────────────────────────────── -->
+    <section id="view-workspace" class="view-panel active">
+      <!-- Step Indicator -->
+      <div class="steps-bar">
+        <div class="step active" id="step-ind-1">
+          <div class="step-num">1</div>
+          <div class="step-label">Create Project</div>
         </div>
-        <div class="pipeline-steps" id="pipeline-steps-list"></div>
+        <div class="step-connector"></div>
+        <div class="step" id="step-ind-2">
+          <div class="step-num">2</div>
+          <div class="step-label">Upload Files</div>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step" id="step-ind-3">
+          <div class="step-num">3</div>
+          <div class="step-label">Generate Tests</div>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step" id="step-ind-4">
+          <div class="step-num">4</div>
+          <div class="step-label">Download</div>
+        </div>
       </div>
 
-      <!-- Results summary -->
-      <div id="results-summary" style="display:none">
-        <div class="results-grid">
-          <div class="metric-card">
-            <div class="metric-val" id="res-req">—</div>
-            <div class="metric-label">Requirements</div>
+      <div class="workspace-content">
+        <!-- Step 1: Projects -->
+        <section class="card step-panel active" id="panel-1">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">Workspace Projects</h2>
+              <p class="card-sub">Create a new isolated context or select an existing project from the listing below.</p>
+            </div>
           </div>
-          <div class="metric-card">
-            <div class="metric-val" id="res-sc">—</div>
-            <div class="metric-label">Scenarios</div>
+          <div class="form-group">
+            <label class="label">Project Name</label>
+            <input id="proj-name" class="input" type="text" placeholder="e.g. MFA Authentication Suite" autocomplete="off">
           </div>
-          <div class="metric-card">
-            <div class="metric-val" id="res-tc">—</div>
-            <div class="metric-label">Test Cases</div>
+          <div class="form-group">
+            <label class="label">Description <span class="muted">(optional)</span></label>
+            <input id="proj-desc" class="input" type="text" placeholder="Brief description of this project's purpose">
           </div>
-          <div class="metric-card">
-            <div class="metric-val" id="res-cov">—</div>
-            <div class="metric-label">Coverage %</div>
-          </div>
-        </div>
-        <div class="review-badge" id="review-badge"></div>
-      </div>
+          <button class="btn btn-primary" id="btn-create-project" onclick="createProject()">
+            <i class="bi bi-plus-lg"></i>
+            Create Project
+          </button>
 
-      <div class="step-nav">
-        <button class="btn btn-ghost" onclick="goStep(2)">← Back</button>
-        <button class="btn btn-success" id="btn-to-download" onclick="goStep(4)" style="display:none">
-          Download Results →
-        </button>
+          <div class="divider"><span>or select existing workspace</span></div>
+          <div id="projects-list" class="project-list">
+            <div class="empty-state">Loading projects...</div>
+          </div>
+        </section>
+
+        <!-- Step 2: Upload Files -->
+        <section class="card step-panel" id="panel-2">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">Upload Project Context</h2>
+              <p class="card-sub">Ingest User Stories, API Specs, or existing Test Case/Defect sheets into your project vector store.</p>
+            </div>
+            <span class="badge badge-teal" id="active-project-badge">—</span>
+          </div>
+
+          <div class="dropzone" id="dropzone" ondrop="handleDrop(event)" ondragover="handleDragover(event)" ondragleave="handleDragleave(event)">
+            <div class="dropzone-inner">
+              <i class="bi bi-cloud-arrow-up-fill drop-icon" style="font-size: 2.5rem; margin-bottom: 8px;"></i>
+              <p class="drop-text">Drag & drop files here or <label class="file-link" for="file-input">browse</label></p>
+              <p class="drop-hint">Supports .md, .txt, .yaml, .yml, .json. Automatically routed by type.</p>
+              <input type="file" id="file-input" multiple accept=".md,.txt,.yaml,.yml,.json" style="display:none" onchange="handleFileSelect(event)">
+            </div>
+          </div>
+
+          <div id="upload-log" class="log-box" style="display:none"></div>
+
+          <div id="files-section" style="display:none">
+            <h3 class="section-title">Workspace Knowledge Base Files</h3>
+            <div id="files-list" class="files-grid"></div>
+          </div>
+
+          <div class="step-nav">
+            <button class="btn btn-ghost" onclick="goStep(1)">← Back</button>
+            <button class="btn btn-primary" onclick="goStep(3)">Continue to Generator →</button>
+          </div>
+        </section>
+
+        <!-- Step 3: Generate -->
+        <section class="card step-panel" id="panel-3">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">Execute Generation Pipeline</h2>
+              <p class="card-sub">Define your target User Story. The factory orchestrator will automatically retrieve knowledge chunks, generate scenarios, and compile test cases.</p>
+            </div>
+            <span class="badge badge-teal" id="gen-project-badge">—</span>
+          </div>
+
+          <div class="form-group">
+            <label class="label">Story / Feature Title</label>
+            <input id="story-title" class="input" type="text" placeholder="e.g. Multi-Factor Authentication Login Flow">
+          </div>
+          <div class="form-group">
+            <label class="label">Description &amp; Scope</label>
+            <textarea id="story-desc" class="input textarea" rows="5" placeholder="Specify functional behavior, conditions, secrets, or compliance laws (e.g. SOC2). Compliance Proxy will sanitize credentials before processing."></textarea>
+          </div>
+          <div class="form-group">
+            <label class="label">Compliance Targets <span class="muted">(comma-separated, optional)</span></label>
+            <input id="compliance-targets" class="input" type="text" placeholder="e.g. SOC2-CC6.1, ISO27001-A.9.4.2, OWASP-ASVS">
+          </div>
+
+          <button class="btn btn-primary btn-large" id="btn-generate" onclick="generateTests()">
+            <i class="bi bi-play-fill"></i>
+            Run Generation Pipeline
+          </button>
+
+          <!-- Pipeline progress -->
+          <div id="pipeline-progress" style="display:none">
+            <div class="progress-header">
+              <span class="progress-title">Running State-Graph Pipeline...</span>
+              <span class="progress-sub" id="pipeline-step-label">Initializing</span>
+            </div>
+            <div class="pipeline-steps" id="pipeline-steps-list"></div>
+          </div>
+
+          <!-- Results summary -->
+          <div id="results-summary" style="display:none">
+            <div class="results-grid">
+              <div class="metric-card">
+                <div class="metric-val" id="res-req">—</div>
+                <div class="metric-label">Requirements</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-val" id="res-sc">—</div>
+                <div class="metric-label">Scenarios</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-val" id="res-tc">—</div>
+                <div class="metric-label">Test Cases</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-val" id="res-cov">—</div>
+                <div class="metric-label">Coverage %</div>
+              </div>
+            </div>
+            <div class="review-badge" id="review-badge"></div>
+          </div>
+
+          <div class="step-nav">
+            <button class="btn btn-ghost" onclick="goStep(2)">← Back</button>
+            <button class="btn btn-success" id="btn-to-download" onclick="goStep(4)" style="display:none">
+              Download Results →
+            </button>
+          </div>
+        </section>
+
+        <!-- Step 4: Download -->
+        <section class="card step-panel" id="panel-4">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">Download Structured Suites</h2>
+              <p class="card-sub">The test suite has successfully generated, reviewed, and trace-mapped. Choose an export format below.</p>
+            </div>
+            <span class="badge badge-green">Ready</span>
+          </div>
+
+          <div class="download-grid">
+            <div class="download-card" id="dl-xlsx" onclick="downloadFile('xlsx')">
+              <div class="dl-icon dl-green">
+                <i class="bi bi-file-earmark-excel-fill" style="font-size: 1.8rem;"></i>
+              </div>
+              <div class="dl-info">
+                <div class="dl-title">Excel Workbook (.xlsx)</div>
+                <div class="dl-sub">Charcoal headers, auto-fit columns, and full traceability mappings. Clean Segoe UI fonts.</div>
+              </div>
+              <div class="dl-arrow">↓</div>
+            </div>
+
+            <div class="download-card" id="dl-json" onclick="downloadFile('json')">
+              <div class="dl-icon dl-blue">
+                <i class="bi bi-file-earmark-code-fill" style="font-size: 1.8rem;"></i>
+              </div>
+              <div class="dl-info">
+                <div class="dl-title">Structured JSON Export (.json)</div>
+                <div class="dl-sub">Full context metadata log, audit trace report, and generated requirements for pipelines.</div>
+              </div>
+              <div class="dl-arrow">↓</div>
+            </div>
+          </div>
+
+          <div class="final-stats" id="final-stats"></div>
+
+          <div class="step-nav">
+            <button class="btn btn-ghost" onclick="goStep(3)">← Back to Generate</button>
+            <button class="btn btn-outline" onclick="newProject()">+ New Project</button>
+          </div>
+        </section>
       </div>
     </section>
 
-    <!-- Step 4: Download -->
-    <section class="card step-panel" id="panel-4">
-      <div class="card-header">
-        <div>
-          <h2 class="card-title">Download Results</h2>
-          <p class="card-sub">Your test suite has been generated and is ready for download.</p>
-        </div>
-        <span class="badge badge-green">Ready</span>
-      </div>
-
-      <div class="download-grid">
-        <div class="download-card" id="dl-xlsx" onclick="downloadFile('xlsx')">
-          <div class="dl-icon dl-green">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-              <polyline points="14 2 14 8 20 8"/>
-              <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
-              <polyline points="10 9 9 9 8 9"/>
-            </svg>
-          </div>
-          <div class="dl-info">
-            <div class="dl-title">Excel Workbook (.xlsx)</div>
-            <div class="dl-sub">Multi-sheet formatted test suite — Requirements, Scenarios, Test Cases, Traceability Matrix</div>
-          </div>
-          <div class="dl-arrow">↓</div>
+    <!-- ── VIEW 2: ARCHITECTURE BLUEPRINT ──────────────────────────────────── -->
+    <section id="view-blueprint" class="view-panel hidden">
+      <div class="blueprint-container">
+        <div class="blueprint-header-card">
+          <h2>Core System Architecture Specification</h2>
+          <p>Solving the triad of <strong>Automated Test Generation</strong>, <strong>Long-term Context Retention</strong>, and <strong>Compliance-Safe Local Deployment</strong> through a config-driven Agent Factory.</p>
         </div>
 
-        <div class="download-card" id="dl-json" onclick="downloadFile('json')">
-          <div class="dl-icon dl-blue">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-              <polyline points="14 2 14 8 20 8"/>
-              <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
-              <polyline points="10 9 9 9 8 9"/>
-            </svg>
+        <div class="problems-grid">
+          <div class="blueprint-card hoverable">
+            <div class="card-num">1</div>
+            <h3>Test Generation Quality</h3>
+            <p>Flat chats hallucinate APIs, skip boundaries, and produce unstructured output. We resolve this with a structured, feedback-driven State Graph pipeline where a specialized audit agent reviews the suite and triggers loops for automatic self-correction.</p>
           </div>
-          <div class="dl-info">
-            <div class="dl-title">JSON Export (.json)</div>
-            <div class="dl-sub">Raw structured pipeline output — ideal for CI/CD integration and tooling</div>
+          <div class="blueprint-card hoverable">
+            <div class="card-num">2</div>
+            <h3>Context Windows & Memory</h3>
+            <p>Complex codebases and manuals overflow context windows, causing LLM amnesia. We resolve this via a central state graph managing a ledger of summaries, and query the vector store on-the-fly to pull only relevant context for the current test scope.</p>
           </div>
-          <div class="dl-arrow">↓</div>
+          <div class="blueprint-card hoverable">
+            <div class="card-num">3</div>
+            <h3>Compliance & Air-gapped Host</h3>
+            <p>Corporate compliance prohibits sending passwords, schema details, or source code to public clouds. ComplianceGuard performs dual-way masking (replacing secrets with local reversible tokens) and facilitates 100% offline local inference.</p>
+          </div>
         </div>
-      </div>
 
-      <!-- Final stats -->
-      <div class="final-stats" id="final-stats"></div>
+        <div class="blueprint-section">
+          <h3>State Graph & Proxy Lifecycle Map</h3>
+          <div class="code-terminal">
+            <div class="term-line"><span class="term-tag term-blue">[INPUT LAYER]</span> Project Knowledge Base ➔ Requirements DB ➔ User Stories & Swagger Specifications</div>
+            <div class="term-line"><span class="term-tag term-teal">[COMPLIANCE SECURITY]</span> ComplianceGuard Scrubbing Proxy ➔ Local Cache (Prevents repetitive LLM costs)</div>
+            <div class="term-line"><span class="term-tag term-purple">[FACTORY LAYER]</span> AgentFactory loads JSON definitions ➔ Dynamically instantiates DynamicAgents</div>
+            <div class="term-line"><span class="term-tag term-warn">[FLOW ENGINE]</span> Orchestrator State-Graph DAG (Orchestrates transitions & self-repair loops)</div>
+            <div class="term-line"><span class="term-tag term-green">[OUTPUT FORMAT]</span> Traceability Validator ➔ Styled Multi-Sheet Excel Workbook Export</div>
+          </div>
+        </div>
 
-      <div class="step-nav">
-        <button class="btn btn-ghost" onclick="goStep(3)">← Back to Generate</button>
-        <button class="btn btn-outline" onclick="newProject()">+ New Project</button>
+        <div class="blueprint-section">
+          <h3>Local Workspace Scaling Details</h3>
+          <div class="scaling-grid">
+            <div class="scaling-card">
+              <h4>1. Local Inference Host (vLLM / Ollama)</h4>
+              <p>Execute open-weights developer models completely locally in your private networks.</p>
+              <code>ollama run qwen2.5-coder:7b</code>
+            </div>
+            <div class="scaling-card">
+              <h4>2. Local Vector Store (Disk-based DB)</h4>
+              <p>Store documents, wikis, and API definitions as embedded vector representations locally.</p>
+              <code>projects/&lt;project_id&gt;/store/vectors.json</code>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
-  </div><!-- /content -->
-</main>
+    <!-- ── VIEW 3: INTERACTIVE SIMULATOR ───────────────────────────────────── -->
+    <section id="view-simulator" class="view-panel hidden">
+      <div class="simulator-layout">
+        <!-- Left Pane: DAG Map -->
+        <div class="simulator-dag">
+          <div class="pane-header-title">
+            <h3>State Graph DAG Flow Map</h3>
+            <p>Click on any pipeline node to inspect its compilation configuration</p>
+          </div>
 
-<!-- ── Toast ────────────────────────────────────────────────────────────────── -->
+          <div class="dag-nodes">
+            <div id="node-kb" class="dag-node active" onclick="selectSimNode('kb')">
+              <div class="dag-node-icon"><i class="bi bi-database-fill"></i></div>
+              <div class="dag-node-info">
+                <h4>Project Knowledge Base</h4>
+                <p>User Stories, Specs & API Docs</p>
+              </div>
+              <span class="dag-tag tag-data">DATA</span>
+            </div>
+
+            <div class="dag-arrow"><i class="bi bi-arrow-down"></i></div>
+
+            <div id="node-retriever" class="dag-node" onclick="selectSimNode('retriever')">
+              <div class="dag-node-icon"><i class="bi bi-search"></i></div>
+              <div class="dag-node-info">
+                <h4>Requirement Retriever</h4>
+                <p>Retrieves business standards & criteria</p>
+              </div>
+              <span class="dag-tag tag-agent">AGENT</span>
+            </div>
+
+            <div class="dag-arrow"><i class="bi bi-arrow-down"></i></div>
+
+            <div id="node-scenario" class="dag-node" onclick="selectSimNode('scenario')">
+              <div class="dag-node-icon"><i class="bi bi-bezier2"></i></div>
+              <div class="dag-node-info">
+                <h4>Scenario Generator</h4>
+                <p>Positive, Negative & Boundary cases</p>
+              </div>
+              <span class="dag-tag tag-agent">AGENT</span>
+            </div>
+
+            <div class="dag-arrow"><i class="bi bi-arrow-down"></i></div>
+
+            <div id="node-generator" class="dag-node" onclick="selectSimNode('generator')">
+              <div class="dag-node-icon"><i class="bi bi-file-earmark-code"></i></div>
+              <div class="dag-node-info">
+                <h4>Test Case Generator</h4>
+                <p>Writes step-by-step test cases</p>
+              </div>
+              <span class="dag-tag tag-agent">AGENT</span>
+            </div>
+
+            <div class="dag-arrow"><i class="bi bi-arrow-down"></i></div>
+
+            <div id="node-reviewer" class="dag-node" onclick="selectSimNode('reviewer')">
+              <div class="dag-node-icon"><i class="bi bi-clipboard-check"></i></div>
+              <div class="dag-node-info">
+                <h4>QA Reviewer / Auditor</h4>
+                <p>Detects coverage & compliance gaps</p>
+              </div>
+              <div class="dag-tag-col">
+                <span class="dag-tag tag-agent">AGENT</span>
+                <span id="sim-reviewer-loop-badge" class="dag-loop-badge" style="display:none">Loop Loop</span>
+              </div>
+            </div>
+
+            <div class="dag-arrow"><i class="bi bi-arrow-down"></i></div>
+
+            <div id="node-trace" class="dag-node" onclick="selectSimNode('trace')">
+              <div class="dag-node-icon"><i class="bi bi-shield-check"></i></div>
+              <div class="dag-node-info">
+                <h4>Traceability Validator</h4>
+                <p>Bi-directional trace mapping</p>
+              </div>
+              <span class="dag-tag tag-val">VALIDATE</span>
+            </div>
+
+            <div class="dag-arrow"><i class="bi bi-arrow-down"></i></div>
+
+            <div id="node-export" class="dag-node" onclick="selectSimNode('export')">
+              <div class="dag-node-icon"><i class="bi bi-file-earmark-excel"></i></div>
+              <div class="dag-node-info">
+                <h4>Spreadsheet Exporter</h4>
+                <p>Outputs charcoal-styled XLSX workbook</p>
+              </div>
+              <span class="dag-tag tag-out">OUTPUT</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Middle Pane: Component Details -->
+        <div class="simulator-details">
+          <div class="pane-header-title border-b">
+            <h3 id="sim-pane-title">Project Knowledge Base</h3>
+            <p id="sim-pane-subtitle">Data Source Component Spec</p>
+          </div>
+
+          <div class="sim-details-content">
+            <div class="detail-section">
+              <h5>ARCHITECTURAL ROLE</h5>
+              <p id="sim-pane-desc">A unified ingestion repository containing unstructured specifications, technical requirements, Jira user stories, API definitions, and compliance/ISO manuals. It acts as the ground truth database for test validation.</p>
+            </div>
+
+            <div class="detail-section">
+              <h5>FACTORY REGISTRATION METADATA</h5>
+              <pre class="json-box" id="sim-pane-config-json">{
+  "source": "knowledge_base",
+  "ingested_entities": ["Jira", "Wikis", "Swagger/OpenAPI"],
+  "chunk_size": 1024,
+  "overlap": 128
+}</pre>
+            </div>
+
+            <div class="detail-section">
+              <h5>CORE CODE EXTRACT</h5>
+              <pre class="code-box" id="sim-pane-code">// Simulated Knowledge Base Entity Structure
+class KnowledgeBase:
+    def __init__(self, workspace_id: str):
+        self.workspace_id = workspace_id
+        self.documents = []
+        
+    def ingest(self, raw_text: str, category: str):
+        self.documents.append({
+            'text': raw_text,
+            'category': category
+        })</pre>
+            </div>
+
+            <div class="detail-section grid-2">
+              <div>
+                <h5>EXPECTED INPUTS</h5>
+                <div class="chip-label" id="sim-pane-input">Raw project descriptions, email scopes, Jira epics, OpenAPI specs.</div>
+              </div>
+              <div>
+                <h5>EXPECTED OUTPUTS</h5>
+                <div class="chip-label" id="sim-pane-output">Tokenized, chunked, and semantic-vector-indexed business artifacts.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Pane: Simulator Controls & Logs -->
+        <div class="simulator-controls">
+          <div class="pane-header-title border-b">
+            <h3>Simulator Console</h3>
+            <p>Deploy local weights and run a mock loopback pipeline demo</p>
+          </div>
+
+          <div class="controls-panel">
+            <div class="form-group">
+              <label class="label">Deploy Target LLM</label>
+              <select id="sim-llm" class="input">
+                <option value="qwen-coder">Qwen-2.5-Coder (Local air-gapped)</option>
+                <option value="llama3-8b">Llama-3-8B-Instruct (Ollama)</option>
+                <option value="gpt4o-proxy">GPT-4o (Secure cloud proxy)</option>
+              </select>
+            </div>
+
+            <div class="toggle-group">
+              <div>
+                <div class="toggle-title">PII Scrubbing Proxy</div>
+                <div class="toggle-sub">Enforce dual-way masking checks</div>
+              </div>
+              <input type="checkbox" id="sim-pii" checked>
+            </div>
+
+            <button class="btn btn-primary" id="btn-run-sim" onclick="runSimulation()" style="width: 100%; justify-content: center;">
+              <i class="bi bi-play-fill"></i>
+              Start Simulation
+            </button>
+          </div>
+
+          <div class="sim-terminal">
+            <div class="terminal-header">
+              <span>CONSOLE MONITOR</span>
+              <span id="sim-console-status" class="status-badge idle">IDLE</span>
+            </div>
+            <div class="terminal-body" id="sim-terminal-logs">
+              <div class="log-info">// Console initialized. Verify configurations and press "Start Simulation".</div>
+            </div>
+            <div class="terminal-footer" id="sim-terminal-download" style="display:none">
+              <a href="#" class="btn btn-success" style="width: 100%; justify-content: center; font-size: 11px; padding: 6px;">
+                <i class="bi bi-file-earmark-excel"></i>
+                Download Generated XLSX
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── VIEW 4: PROTOTYPE CODE BROWSER ──────────────────────────────────── -->
+    <section id="view-code" class="view-panel hidden">
+      <div class="code-browser-layout">
+        <!-- File Navigation Left -->
+        <aside class="code-file-nav">
+          <div class="pane-header-title">
+            <h3>Project Package</h3>
+            <p>Explore the live Python modules driving this system</p>
+          </div>
+
+          <div class="folder-tree">
+            <div class="tree-root">
+              <i class="bi bi-folder-fill" style="color: #eab308;"></i>
+              <span>qa_agent_factory/</span>
+            </div>
+            <div class="tree-subdir">
+              <div class="tree-item">
+                <i class="bi bi-folder-fill" style="color: #eab308;"></i>
+                <span>src/</span>
+              </div>
+              <div class="tree-files">
+                <button id="code-fn-compliance" class="file-item active" onclick="loadCodeFile('compliance')">
+                  <i class="bi bi-filetype-py"></i>
+                  <span>compliance.py</span>
+                </button>
+                <button id="code-fn-factory" class="file-item" onclick="loadCodeFile('factory')">
+                  <i class="bi bi-filetype-py"></i>
+                  <span>factory.py</span>
+                </button>
+                <button id="code-fn-orchestrator" class="file-item" onclick="loadCodeFile('orchestrator')">
+                  <i class="bi bi-filetype-py"></i>
+                  <span>orchestrator.py</span>
+                </button>
+                <button id="code-fn-traceability" class="file-item" onclick="loadCodeFile('traceability')">
+                  <i class="bi bi-filetype-py"></i>
+                  <span>traceability.py</span>
+                </button>
+                <button id="code-fn-exporter" class="file-item" onclick="loadCodeFile('exporter')">
+                  <i class="bi bi-filetype-py"></i>
+                  <span>exporter.py</span>
+                </button>
+              </div>
+              <button id="code-fn-demo" class="file-item" onclick="loadCodeFile('demo')">
+                <i class="bi bi-filetype-py" style="color: var(--teal);"></i>
+                <span>demo.py</span>
+              </button>
+              <button id="code-fn-blueprint" class="file-item" onclick="loadCodeFile('blueprint')">
+                <i class="bi bi-filetype-md" style="color: #c084fc;"></i>
+                <span>ARCH_BLUEPRINT.md</span>
+              </button>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Code Viewer Right -->
+        <div class="code-viewer-container">
+          <div class="viewer-header">
+            <div class="viewer-file-info">
+              <i class="bi bi-file-code-fill text-teal"></i>
+              <span id="code-viewer-path">/src/compliance.py</span>
+            </div>
+            <button class="btn btn-ghost" onclick="copyCode()" style="padding: 4px 10px; font-size: 11px;">
+              <i class="bi bi-clipboard"></i>
+              Copy File
+            </button>
+          </div>
+          <div class="viewer-body">
+            <pre><code id="code-viewer-pre">Loading code module...</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── VIEW 5: KNOWLEDGE BASE EXPLORER ─────────────────────────────────── -->
+    <section id="view-kb" class="view-panel hidden">
+      <div class="kb-explorer-layout">
+        <!-- Control Form Left -->
+        <div class="kb-sidebar">
+          <div class="pane-header-title">
+            <h3>Project Vector Database</h3>
+            <p>Audit and search semantic vectors inside the project indexes</p>
+          </div>
+
+          <div class="kb-controls">
+            <div class="form-group">
+              <label class="label">Target Project</label>
+              <select id="kb-project-select" class="input" onchange="kbProjectChanged()">
+                <option value="">Select a project...</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="label">Source Type Filter</label>
+              <select id="kb-source-select" class="input">
+                <option value="">All Source Types</option>
+                <option value="user_stories">User Stories</option>
+                <option value="api_specs">API Specs</option>
+                <option value="existing_test_cases_defects">Test Cases / Defects</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="label">Search Query</label>
+              <textarea id="kb-search-query" class="input textarea" rows="3" placeholder="Enter keywords or criteria to semantic match..."></textarea>
+            </div>
+
+            <div class="kb-actions">
+              <button class="btn btn-primary" id="btn-kb-search" onclick="kbSearch()">
+                <i class="bi bi-search"></i>
+                Semantic Query
+              </button>
+              <button class="btn btn-ghost" id="btn-kb-reingest" onclick="kbIngest()">
+                <i class="bi bi-arrow-repeat"></i>
+                Re-index
+              </button>
+            </div>
+          </div>
+
+          <!-- Status logs -->
+          <div class="kb-logs-box">
+            <div class="logs-header">INGESTION LOG</div>
+            <div id="kb-ingest-status" class="logs-body">
+              Select a project to load vector status.
+            </div>
+          </div>
+
+          <!-- Statistics -->
+          <div class="kb-stats-box">
+            <div class="stats-header">DATABASE STATS</div>
+            <div id="kb-stats-body" class="stats-body">
+              No stats compiled yet. Select a workspace project.
+            </div>
+          </div>
+        </div>
+
+        <!-- Retrieval Results Right -->
+        <div class="kb-results-panel">
+          <div class="pane-header-title border-b flex justify-between items-center" style="padding: 14px 20px;">
+            <div>
+              <h3>Semantic Retrieval Results</h3>
+              <p>Top ranked text chunks matches from vector db search</p>
+            </div>
+            <span id="kb-results-badge" class="badge badge-teal">0 Results</span>
+          </div>
+
+          <div id="kb-results-container" class="kb-results-body">
+            <div class="kb-empty-results">
+              <i class="bi bi-database" style="font-size: 2.5rem; color: var(--border2); margin-bottom: 12px; display: block;"></i>
+              <p>Please select a project and enter a query, then click "Semantic Query" to retrieve vector matches.</p>
+            </div>
+          </div>
+        </div>
+    </section>
+
+    <!-- ── Content Footer ──────────────────────────────────────────────────── -->
+    <footer class="content-footer">
+      <div class="footer-inner">
+        <span>Powered by <span class="credit-highlight">Farrukh Khan</span></span>
+      </div>
+    </footer>
+
+  </main>
+</div>
+
+<!-- ── Toast Notifier ────────────────────────────────────────────────────── -->
 <div id="toast" class="toast"></div>
 
+<!-- App logic script -->
 <script src="/app.js"></script>
 </body>
 </html>

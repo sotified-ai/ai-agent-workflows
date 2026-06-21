@@ -140,6 +140,13 @@ class GenerateRequest(BaseModel):
     compliance_targets: Optional[List[str]] = []
 
 
+class SearchRequest(BaseModel):
+    query: str
+    top_k: Optional[int] = 10
+    source_type_filter: Optional[str] = None
+    min_confidence: Optional[float] = 0.0
+
+
 # ── Routes ────────────────────────────────────────────────────────────────────
 
 @app.get("/api/health")
@@ -401,6 +408,104 @@ def download_json(project_id: str):
         media_type="application/json",
         filename=f"{safe_name}_TestSuite.json",
     )
+
+
+@app.get("/api/projects/{project_id}/stats")
+def get_kb_stats(project_id: str):
+    """Get project Knowledge Base statistics."""
+    load_project_meta(project_id)
+    try:
+        from src.knowledge_base.project_loader import ProjectLoader
+        from src.knowledge_base.retriever import KnowledgeRetriever
+        
+        loader = ProjectLoader(PROJECTS_DIR)
+        cfg = loader.load_or_scaffold(project_id, "")
+        retriever = KnowledgeRetriever(cfg)
+        return retriever.stats()
+    except Exception as exc:
+        logger.error("Failed to get KB stats: %s", exc)
+        raise HTTPException(status_code=500, detail=str(exc))
+
+
+@app.post("/api/projects/{project_id}/search")
+def search_kb(project_id: str, req: SearchRequest):
+    """Perform a semantic search in the project's knowledge base."""
+    load_project_meta(project_id)
+    try:
+        from src.knowledge_base.project_loader import ProjectLoader
+        from src.knowledge_base.retriever import KnowledgeRetriever
+        from src.knowledge_base.models import SourceType
+        
+        loader = ProjectLoader(PROJECTS_DIR)
+        cfg = loader.load_or_scaffold(project_id, "")
+        
+        st_filter = None
+        if req.source_type_filter:
+            try:
+                st_filter = SourceType(req.source_type_filter)
+            except ValueError:
+                pass
+                
+        retriever = KnowledgeRetriever(cfg)
+        result = retriever.search_json(
+            req.query,
+            top_k=req.top_k,
+            source_type_filter=st_filter,
+            min_confidence=req.min_confidence or 0.0,
+        )
+        return result
+    except Exception as exc:
+        logger.error("Semantic search failed: %s", exc)
+        raise HTTPException(status_code=500, detail=str(exc))
+
+
+@app.post("/api/projects/{project_id}/ingest")
+def reingest_kb(project_id: str):
+    """Rebuild the vector index for this project (re-ingests all sources)."""
+    meta = load_project_meta(project_id)
+    try:
+        from src.knowledge_base.project_loader import ProjectLoader
+        from src.knowledge_base.ingest import IngestionPipeline
+
+        loader = ProjectLoader(PROJECTS_DIR)
+        cfg = loader.load_or_scaffold(project_id, meta["name"])
+        ingestor = IngestionPipeline(cfg)
+        report = ingestor.ingest_all_sources()
+        
+        total_chunks = sum(r.chunks_created for r in report if hasattr(r, "chunks_created"))
+        return {
+            "status": "completed",
+            "message": f"Successfully re-indexed {total_chunks} chunks across project sources.",
+            "total_chunks": total_chunks
+        }
+    except Exception as exc:
+        logger.error("Re-ingestion failed: %s", exc)
+        raise HTTPException(status_code=500, detail=str(exc))
+
+
+
+@app.get("/api/code/{filename}")
+def get_code(filename: str):
+    """Fetch file contents for the code browser."""
+    allowed_files = {
+        "compliance": BASE_DIR / "src" / "compliance.py",
+        "factory": BASE_DIR / "src" / "factory.py",
+        "orchestrator": BASE_DIR / "src" / "orchestrator.py",
+        "traceability": BASE_DIR / "src" / "traceability.py",
+        "exporter": BASE_DIR / "src" / "exporter.py",
+        "demo": BASE_DIR / "demo.py",
+        "blueprint": BASE_DIR / "ARCH_BLUEPRINT.md",
+    }
+    if filename not in allowed_files:
+        raise HTTPException(status_code=404, detail="File not found")
+    
+    file_path = allowed_files[filename]
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail="File not found on disk")
+        
+    with open(file_path, "r", encoding="utf-8") as f:
+        return {"filename": file_path.name, "content": f.read()}
+
 
 
 # ── Static Files (Frontend) ───────────────────────────────────────────────────
