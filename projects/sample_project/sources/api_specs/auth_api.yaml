@@ -1,0 +1,71 @@
+openapi: 3.0.3
+info:
+  title: Authentication API
+  version: 1.0.0
+  description: Authentication endpoints for the MFA-enabled login system.
+
+paths:
+  /auth/login:
+    post:
+      summary: Primary login with email and password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+              required: [email, password]
+      responses:
+        "200":
+          description: Login successful, MFA challenge required
+        "401":
+          description: Invalid credentials
+
+  /auth/mfa/verify:
+    post:
+      summary: Verify TOTP code for multi-factor authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                session_token:
+                  type: string
+                totp_code:
+                  type: string
+                  pattern: "^[0-9]{6}$"
+              required: [session_token, totp_code]
+      responses:
+        "200":
+          description: MFA verified, session issued
+        "401":
+          description: Invalid TOTP code
+        "429":
+          description: Account locked due to too many attempts
+
+  /auth/password/reset:
+    post:
+      summary: Request a password reset link
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+              required: [email]
+      responses:
+        "200":
+          description: Reset link sent if email exists

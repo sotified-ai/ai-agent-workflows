@@ -1,0 +1,72 @@
+/* Custom Styles for QA Agent Factory Dashboard */
+
+@layer base {
+  body {
+    @apply bg-slate-900 text-slate-100;
+  }
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-slate-950;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-800 rounded-full hover:bg-slate-700 transition-colors;
+}
+
+/* Visual Node Connections & Transitions */
+.node-active {
+  @apply border-teal-400 bg-teal-950/40 text-teal-200 shadow-[0_0_15px_rgba(45,212,191,0.2)];
+}
+
+.node-inactive {
+  @apply border-slate-700 bg-slate-850 text-slate-400 hover:border-slate-500 hover:text-slate-200;
+}
+
+.node-success {
+  @apply border-emerald-500 bg-emerald-950/40 text-emerald-200 shadow-[0_0_15px_rgba(16,185,129,0.2)];
+}
+
+.node-warning {
+  @apply border-amber-500 bg-amber-950/40 text-amber-200 shadow-[0_0_15px_rgba(245,158,11,0.2)];
+}
+
+.node-error {
+  @apply border-rose-500 bg-rose-950/40 text-rose-200 shadow-[0_0_15px_rgba(244,63,94,0.3)];
+}
+
+/* Custom terminal console text styles */
+.term-log {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+}
+
+/* Tab Active/Inactive */
+.tab-active {
+  @apply border-teal-500 text-teal-400 bg-slate-800/50;
+}
+
+.tab-inactive {
+  @apply border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-800/30;
+}
+
+/* Pulse animation for running simulators */
+@keyframes pulse-teal {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(45, 212, 191, 0.4);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 0 15px 4px rgba(45, 212, 191, 0.2);
+  }
+}
+
+.pulse-active {
+  animation: pulse-teal 2s infinite ease-in-out;
+}

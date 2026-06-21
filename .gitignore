@@ -1,0 +1,33 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local development caches
+.cache/
+.pytest_cache/
+
+# Local Vector DB data (optional, but keep sample project vector data clean)
+projects/*/store/*.json
+!projects/sample_project/store/vectors.json
+
+# Exported Excel sheets
+*.xlsx
+
+# Archive files
+*.zip
+*.tar.gz
+*.tgz
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE settings
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp

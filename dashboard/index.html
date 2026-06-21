@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>QA Agent Factory — Interactive Architecture Blueprint</title>
+  <script src="tailwindcss.global.js"></script>
+  <style type="text/tailwindcss">
+    @custom-variant dark (&:where(.dark, .dark *));
+  </style>
+  <script>
+    // Force dark mode
+    document.documentElement.classList.add('dark');
+  </script>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="bootstrap-icons.min.css">
+  <link rel="stylesheet" href="fonts.css">
+</head>
+
+<body class="min-h-dvh bg-slate-950 text-slate-100 font-sans antialiased text-sm">
+
+  <div id="app" class="flex flex-col h-screen overflow-hidden">
+    <!-- Main Header -->
+    <header
+      class="flex items-center justify-between px-6 py-4 bg-slate-900/80 border-b border-slate-800 backdrop-blur-md shrink-0">
+      <div class="flex items-center gap-3">
+        <div
+          class="w-10 h-10 rounded-xl bg-gradient-to-tr from-teal-500 to-cyan-500 flex items-center justify-center shadow-lg shadow-teal-500/20">
+          <i class="bi bi-cpu text-xl text-white"></i>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold text-white tracking-wide flex items-center gap-2">
+            QA AGENT FACTORY
+            <span
+              class="text-xs px-2 py-0.5 bg-teal-500/15 text-teal-400 border border-teal-500/30 rounded-full font-medium">Enterprise
+              Core</span>
+          </h1>
+          <p class="text-xs text-slate-400">Context-Retained, Privacy-Safe Local Test Generation Engine</p>
+        </div>
+      </div>
+
+      <!-- Top Action Tabs -->
+      <nav class="flex gap-1 bg-slate-950 p-1 rounded-lg border border-slate-800">
+        <button id="tab-btn-blueprint"
+          class="px-4 py-2 text-xs font-medium rounded-md border transition-all cursor-pointer tab-active"
+          onclick="switchTab('blueprint')">
+          <i class="bi bi-journal-text mr-1.5 text-sm"></i> Architecture Blueprint
+        </button>
+        <button id="tab-btn-simulator"
+          class="px-4 py-2 text-xs font-medium rounded-md border transition-all cursor-pointer tab-inactive"
+          onclick="switchTab('simulator')">
+          <i class="bi bi-play-circle mr-1.5 text-sm"></i> Interactive Factory Simulator
+        </button>
+        <button id="tab-btn-repo"
+          class="px-4 py-2 text-xs font-medium rounded-md border transition-all cursor-pointer tab-inactive"
+          onclick="switchTab('repo')">
+          <i class="bi bi-folder-symlink mr-1.5 text-sm"></i> Runnable Prototype Code
+        </button>
+        <button id="tab-btn-knowledgebase"
+          class="px-4 py-2 text-xs font-medium rounded-md border transition-all cursor-pointer tab-inactive"
+          onclick="switchTab('knowledgebase')">
+          <i class="bi bi-database-fill-gear mr-1.5 text-sm"></i> Knowledge Base
+        </button>
+      </nav>
+    </header>
+
+    <!-- Main Dynamic Content Region -->
+    <main class="flex-1 overflow-hidden relative">
+
+      <!-- TAB 1: ARCHITECTURE BLUEPRINT -->
+      <section id="tab-blueprint" class="h-full overflow-y-auto px-8 py-6 space-y-8">
+        <div class="max-w-4xl mx-auto space-y-8">
+
+          <!-- Banner -->
+          <div
+            class="p-6 rounded-2xl bg-gradient-to-r from-slate-900 to-slate-850 border border-slate-800 shadow-xl relative overflow-hidden">
+            <div class="absolute -right-16 -top-16 w-48 h-48 bg-teal-500/5 rounded-full blur-3xl pointer-events-none">
+            </div>
+            <h2 class="text-2xl font-bold text-white mb-2">Build a "QA Agent Factory", not separate hardcoded agents.
+            </h2>
+            <p class="text-slate-300 leading-relaxed text-sm max-w-3xl">
+              An enterprise-grade QA engine cannot rely on isolated, static agents. Requirements change, compliance laws
+              adapt, and APIs shift.
+              By establishing a central, configuration-driven <strong>Agent Factory</strong>, the system generates
+              custom validation agents dynamically,
+              preserving security boundaries, optimizing context memory, and maintaining 100% bidirectional traceability
+              automatically.
+            </p>
+          </div>
+
+          <!-- Problem/Solution Matrix Cards -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div
+              class="p-5 rounded-xl bg-slate-900 border border-slate-850 hover:border-teal-500/30 transition-all shadow-md">
+              <div
+                class="w-8 h-8 rounded-lg bg-teal-500/10 text-teal-400 flex items-center justify-center mb-4 font-bold">
+                1</div>
+              <h3 class="text-white font-semibold mb-2">Test Generation Accuracy</h3>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                Replaces standard chats with structured prompt pipelines. Dynamic Peer-Review loops automatically detect
+                coverage gaps and trigger
+                immediate self-correction runs, achieving zero hallucination rates.
+              </p>
+            </div>
+            <div
+              class="p-5 rounded-xl bg-slate-900 border border-slate-850 hover:border-teal-500/30 transition-all shadow-md">
+              <div
+                class="w-8 h-8 rounded-lg bg-teal-500/10 text-teal-400 flex items-center justify-center mb-4 font-bold">
+                2</div>
+              <h3 class="text-white font-semibold mb-2">Context Retention Layer</h3>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                Utilizes a Central Shared Execution Ledger combined with Semantic Workspace Compression. Only active
+                requirements are compiled, avoiding
+                LLM amnesia or window exhaustion.
+              </p>
+            </div>
+            <div
+              class="p-5 rounded-xl bg-slate-900 border border-slate-850 hover:border-teal-500/30 transition-all shadow-md">
+              <div
+                class="w-8 h-8 rounded-lg bg-teal-500/10 text-teal-400 flex items-center justify-center mb-4 font-bold">
+                3</div>
+              <h3 class="text-white font-semibold mb-2">Compliance-Safe Security</h3>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                Integrates dual-way in-flight masking to scrub and anonymize PII (emails, database secrets, IPs) before
+                inference, restoring them locally
+                post-execution. Air-gapped local LLMs supported out-of-the-box.
+              </p>
+            </div>
+          </div>
+
+          <!-- Recommended Architecture Visual Guide -->
+          <div class="p-6 rounded-xl bg-slate-900 border border-slate-850 shadow-md">
+            <h3 class="text-white font-semibold mb-4 flex items-center gap-2">
+              <i class="bi bi-diagram-3-fill text-teal-400"></i> Recommended Architecture Specification
+            </h3>
+            <div
+              class="p-4 bg-slate-950 rounded-lg border border-slate-800 flex flex-col gap-3 overflow-x-auto text-xs term-log">
+              <div class="flex items-center gap-4 text-slate-400 py-1 border-b border-slate-900">
+                <span class="w-24 shrink-0 font-bold text-teal-400">INPUT LAYER</span>
+                <span>Project Knowledge Base ➔ Requirements DB ➔ Jira User Stories & API Definitions</span>
+              </div>
+              <div class="flex items-center gap-4 text-slate-400 py-1 border-b border-slate-900">
+                <span class="w-24 shrink-0 font-bold text-teal-400">PROXY / SHIELD</span>
+                <span>ComplianceGuard (PII Masker) ➔ Local Semantic Cache (Determinism Optimizer)</span>
+              </div>
+              <div class="flex items-center gap-4 text-slate-400 py-1 border-b border-slate-900">
+                <span class="w-24 shrink-0 font-bold text-teal-400">FACTORY registry</span>
+                <span>AgentFactory loads JSON definitions ➔ Dynamically instantiates Compiled DynamicAgents</span>
+              </div>
+              <div class="flex items-center gap-4 text-slate-400 py-1 border-b border-slate-900">
+                <span class="w-24 shrink-0 font-bold text-teal-400">STATE GRAPH</span>
+                <span>DAG Orchestrator handles sequential execution AND self-healing loop-backs on audit failures</span>
+              </div>
+              <div class="flex items-center gap-4 text-slate-400 py-1">
+                <span class="w-24 shrink-0 font-bold text-teal-400">OUTPUT EXPORT</span>
+                <span>Traceability Validator calculates coverage maps ➔ Exporter formats multi-sheet structured Excel
+                  (XLSX)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Deployment roadmap -->
+          <div class="space-y-4">
+            <h3 class="text-lg font-semibold text-white">Local Deployment & Scaling Guide</h3>
+            <div class="p-5 rounded-xl bg-slate-900 border border-slate-850 space-y-4">
+              <p class="text-xs text-slate-400 leading-relaxed">
+                To run the system in complete network isolation for absolute air-gapped security, we deploy local LLM
+                execution nodes:
+              </p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="p-4 bg-slate-950 rounded-lg border border-slate-800">
+                  <h4 class="text-white font-medium text-xs mb-2">1. Local Inference Host (vLLM / Ollama)</h4>
+                  <p class="text-[11px] text-slate-400 leading-relaxed mb-3">Deploy open-source high-capability
+                    developer and QA models on local workstations or private servers.</p>
+                  <code
+                    class="block p-2 bg-slate-900 border border-slate-800 text-[10px] text-emerald-400 rounded term-log">
+                    ollama run qwen2.5-coder:7b<br>
+                    # Or boot high-throughput vLLM container
+                  </code>
+                </div>
+                <div class="p-4 bg-slate-950 rounded-lg border border-slate-800">
+                  <h4 class="text-white font-medium text-xs mb-2">2. Private Vector Store (Qdrant / PGVector)</h4>
+                  <p class="text-[11px] text-slate-400 leading-relaxed mb-3">Index corporate wikis, historical test
+                    suites, and compliance documents locally to enable secure retrieval.</p>
+                  <code
+                    class="block p-2 bg-slate-900 border border-slate-800 text-[10px] text-emerald-400 rounded term-log">
+                    docker run -p 6333:6333 qdrant/qdrant<br>
+                    # Use local sentence-transformers embedding
+                  </code>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- TAB 2: INTERACTIVE FACTORY SIMULATOR -->
+      <section id="tab-simulator" class="hidden h-full flex overflow-hidden">
+
+        <!-- Left: Agent DAG Visualizer -->
+        <div class="w-2/5 h-full bg-slate-950 border-r border-slate-850 flex flex-col overflow-y-auto px-6 py-4">
+          <div class="mb-4">
+            <h3 class="text-white font-bold text-sm tracking-wide">STATE GRAPH DAG MAP</h3>
+            <p class="text-xs text-slate-400">Click on any pipeline node to inspect its compilation specifications</p>
+          </div>
+
+          <!-- DAG Nodes Layout -->
+          <div class="space-y-4 flex-1 flex flex-col justify-between py-2">
+
+            <!-- Node: Knowledge Base -->
+            <div id="node-kb"
+              class="p-3.5 rounded-xl border transition-all cursor-pointer node-inactive flex items-center justify-between"
+              onclick="selectNode('kb')">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-slate-300">
+                  <i class="bi bi-database-fill"></i>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-xs">Project Knowledge Base</h4>
+                  <p class="text-[10px] text-slate-400">User Stories, Specs & API Definitions</p>
+                </div>
+              </div>
+              <span
+                class="text-[10px] uppercase font-bold tracking-widest text-slate-500 px-2 py-0.5 bg-slate-900 rounded border border-slate-800 shrink-0">DATA
+                SOURCE</span>
+            </div>
+
+            <div class="h-4 flex justify-center"><i class="bi bi-arrow-down text-slate-700"></i></div>
+
+            <!-- Node: Requirement Retriever -->
+            <div id="node-retriever"
+              class="p-3.5 rounded-xl border transition-all cursor-pointer node-inactive flex items-center justify-between"
+              onclick="selectNode('retriever')">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-slate-300">
+                  <i class="bi bi-search"></i>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-xs">Requirement Retriever</h4>
+                  <p class="text-[10px] text-slate-400">Retrieves business standards & criteria</p>
+                </div>
+              </div>
+              <span
+                class="text-[10px] uppercase font-bold tracking-widest text-teal-400 px-2 py-0.5 bg-teal-500/10 rounded border border-teal-500/20 shrink-0">DYNAMIC
+                AGENT</span>
+            </div>
+
+            <div class="h-4 flex justify-center"><i class="bi bi-arrow-down text-slate-700"></i></div>
+
+            <!-- Node: Scenario Generator -->
+            <div id="node-scenario"
+              class="p-3.5 rounded-xl border transition-all cursor-pointer node-inactive flex items-center justify-between"
+              onclick="selectNode('scenario')">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-slate-300">
+                  <i class="bi bi-bezier2"></i>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-xs">Scenario Generator</h4>
+                  <p class="text-[10px] text-slate-400">Positive, Negative & Boundary scenarios</p>
+                </div>
+              </div>
+              <span
+                class="text-[10px] uppercase font-bold tracking-widest text-teal-400 px-2 py-0.5 bg-teal-500/10 rounded border border-teal-500/20 shrink-0">DYNAMIC
+                AGENT</span>
+            </div>
+
+            <div class="h-4 flex justify-center"><i class="bi bi-arrow-down text-slate-700"></i></div>
+
+            <!-- Node: Test Case Generator -->
+            <div id="node-generator"
+              class="p-3.5 rounded-xl border transition-all cursor-pointer node-inactive flex items-center justify-between"
+              onclick="selectNode('generator')">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-slate-300">
+                  <i class="bi bi-file-earmark-code"></i>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-xs">Test Case Generator</h4>
+                  <p class="text-[10px] text-slate-400">Compiles executable test scripts</p>
+                </div>
+              </div>
+              <span
+                class="text-[10px] uppercase font-bold tracking-widest text-teal-400 px-2 py-0.5 bg-teal-500/10 rounded border border-teal-500/20 shrink-0">DYNAMIC
+                AGENT</span>
+            </div>
+
+            <div class="h-4 flex justify-center"><i class="bi bi-arrow-down text-slate-700"></i></div>
+
+            <!-- Node: QA Reviewer -->
+            <div id="node-reviewer"
+              class="p-3.5 rounded-xl border transition-all cursor-pointer node-inactive flex items-center justify-between"
+              onclick="selectNode('reviewer')">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-slate-300">
+                  <i class="bi bi-clipboard-check"></i>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-xs">QA Reviewer / Gap Auditor</h4>
+                  <p class="text-[10px] text-slate-400">Detects compliance & coverage gaps</p>
+                </div>
+              </div>
+              <div class="flex flex-col items-end gap-1 shrink-0">
+                <span
+                  class="text-[10px] uppercase font-bold tracking-widest text-teal-400 px-2 py-0.5 bg-teal-500/10 rounded border border-teal-500/20">DYNAMIC
+                  AGENT</span>
+                <span id="reviewer-badge" class="hidden text-[8px] uppercase font-black px-1 rounded">REJECTED ➔
+                  LOOP</span>
+              </div>
+            </div>
+
+            <div class="h-4 flex justify-center"><i class="bi bi-arrow-down text-slate-700"></i></div>
+
+            <!-- Node: Traceability Validator -->
+            <div id="node-trace"
+              class="p-3.5 rounded-xl border transition-all cursor-pointer node-inactive flex items-center justify-between"
+              onclick="selectNode('trace')">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-slate-300">
+                  <i class="bi bi-shield-check"></i>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-xs">Traceability Validator</h4>
+                  <p class="text-[10px] text-slate-400">Bi-directional validation matrix</p>
+                </div>
+              </div>
+              <span
+                class="text-[10px] uppercase font-bold tracking-widest text-slate-500 px-2 py-0.5 bg-slate-900 rounded border border-slate-800 shrink-0">VALIDATION</span>
+            </div>
+
+            <div class="h-4 flex justify-center"><i class="bi bi-arrow-down text-slate-700"></i></div>
+
+            <!-- Node: Spreadsheet Exporter -->
+            <div id="node-export"
+              class="p-3.5 rounded-xl border transition-all cursor-pointer node-inactive flex items-center justify-between"
+              onclick="selectNode('export')">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-slate-300">
+                  <i class="bi bi-file-earmark-excel"></i>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-xs">Multi-Sheet Spreadsheet Exporter</h4>
+                  <p class="text-[10px] text-slate-400">Generates styled structured XLSX workbook</p>
+                </div>
+              </div>
+              <span
+                class="text-[10px] uppercase font-bold tracking-widest text-emerald-400 px-2 py-0.5 bg-emerald-500/10 rounded border border-emerald-500/20 shrink-0">OUTPUT</span>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Middle: Dynamic Configuration & Code Details Panel -->
+        <div class="w-2/5 h-full bg-slate-900 border-r border-slate-800 flex flex-col overflow-hidden">
+
+          <!-- Pane Header -->
+          <div class="px-5 py-4 border-b border-slate-800 bg-slate-900 flex justify-between items-center shrink-0">
+            <div>
+              <h3 id="pane-title" class="text-white font-bold text-sm tracking-wide">COMPONENT SPECIFICATION</h3>
+              <p id="pane-subtitle" class="text-xs text-slate-400">Detailed dynamic metadata of the selected pipeline
+                stage</p>
+            </div>
+            <span id="pane-type-badge"
+              class="text-[9px] uppercase font-bold bg-slate-950 px-2.5 py-1 border border-slate-800 rounded">SPEC</span>
+          </div>
+
+          <!-- Pane Body -->
+          <div class="flex-1 overflow-y-auto p-5 space-y-5">
+
+            <!-- Description Box -->
+            <div class="space-y-1">
+              <h4 class="text-xs text-slate-400 uppercase font-semibold">Architectural Role</h4>
+              <p id="pane-desc" class="text-xs text-slate-200 leading-relaxed"></p>
+            </div>
+
+            <!-- Dynamic Config Definition Box -->
+            <div class="space-y-1.5">
+              <h4 class="text-xs text-slate-400 uppercase font-semibold">Factory Registration Configuration (Metadata)
+              </h4>
+              <pre
+                class="p-3 bg-slate-950 rounded-lg border border-slate-800 text-[11px] text-emerald-400 term-log overflow-x-auto"
+                id="pane-config-json"></pre>
+            </div>
+
+            <!-- Core Code Box -->
+            <div class="space-y-1.5">
+              <h4 class="text-xs text-slate-400 uppercase font-semibold">Core Framework Integration Code</h4>
+              <pre
+                class="p-3 bg-slate-950 rounded-lg border border-slate-800 text-[10px] text-cyan-300 term-log overflow-x-auto whitespace-pre"
+                id="pane-code"></pre>
+            </div>
+
+            <!-- Input/Output Schema Box -->
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <h4 class="text-xs text-slate-400 uppercase font-semibold mb-1">Expected Inputs</h4>
+                <div class="p-2 bg-slate-950 rounded-md border border-slate-800 text-[11px] term-log" id="pane-input">
+                </div>
+              </div>
+              <div>
+                <h4 class="text-xs text-slate-400 uppercase font-semibold mb-1">Generated Outputs</h4>
+                <div class="p-2 bg-slate-950 rounded-md border border-slate-800 text-[11px] term-log" id="pane-output">
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Right: Execution Panel & Simulated Output -->
+        <div class="w-1/5 h-full bg-slate-950 flex flex-col overflow-hidden">
+
+          <!-- Playground Title -->
+          <div class="px-5 py-4 border-b border-slate-850 bg-slate-950 shrink-0">
+            <h3 class="text-white font-bold text-sm tracking-wide">FACTORY CONTROLS</h3>
+            <p class="text-xs text-slate-400">Configure parameters and run the engine</p>
+          </div>
+
+          <!-- Configuration Controls -->
+          <div class="p-4 space-y-4 border-b border-slate-850 bg-slate-900/40">
+            <!-- LLM Selector -->
+            <div class="space-y-1">
+              <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Deploy Target LLM</label>
+              <select id="config-llm"
+                class="w-full bg-slate-950 border border-slate-800 rounded p-1.5 text-xs text-slate-200">
+                <option value="llama3-8b-local">Qwen-2.5-Coder (Local air-gapped)</option>
+                <option value="llama3-70b-local">Llama-3-8B-Instruct (Ollama Local)</option>
+                <option value="gpt4-cloud-proxy">GPT-4o (Secure cloud proxy)</option>
+              </select>
+            </div>
+
+            <!-- PII Masking toggle -->
+            <div class="flex items-center justify-between bg-slate-950/50 p-2 rounded border border-slate-850">
+              <div class="flex flex-col">
+                <span class="text-xs font-semibold text-white">PII Scrubbing Proxy</span>
+                <span class="text-[9px] text-slate-400">Scrub in-flight passwords/IPs</span>
+              </div>
+              <input type="checkbox" id="config-pii" checked
+                class="w-4 h-4 rounded border-slate-800 accent-teal-500 cursor-pointer">
+            </div>
+
+            <!-- Run button -->
+            <button id="run-btn"
+              class="w-full bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold py-2.5 rounded-lg text-xs tracking-wider uppercase transition-all shadow-lg shadow-teal-500/10 cursor-pointer"
+              onclick="runSimulation()">
+              <i class="bi bi-play-fill mr-1 text-sm"></i> Run Simulator
+            </button>
+          </div>
+
+          <!-- Simulated Log/Console Output -->
+          <div class="flex-1 flex flex-col min-h-0 bg-slate-950">
+            <div class="px-4 py-2 border-b border-slate-850 bg-slate-950 flex justify-between items-center">
+              <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Execution Console</span>
+              <span id="sim-status" class="text-[10px] font-bold text-slate-500 uppercase">IDLE</span>
+            </div>
+
+            <!-- Logs text container -->
+            <div id="sim-logs"
+              class="flex-1 overflow-y-auto p-4 space-y-2.5 text-[11px] term-log text-slate-300 leading-relaxed scroll-smooth">
+              <div class="text-slate-500">// Console ready. Configure controls and press "Run Simulator" to execute the
+                pipeline loop.</div>
+            </div>
+
+            <!-- Download export button -->
+            <div id="sim-export-box" class="hidden p-3 border-t border-slate-850 bg-slate-900/40">
+              <a href="https://gumloop.com/files/bkcUhgJ4PPPpPNNcFabpHy?version_id=UNbATE4bLjgVLMRq2f3gaH"
+                id="download-xlsx-btn"
+                class="flex items-center justify-center gap-2 w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-2 rounded text-xs transition-all cursor-pointer">
+                <i class="bi bi-cloud-arrow-down-fill text-sm"></i> Download Styled XLSX
+              </a>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- TAB 3: RUNNABLE CODE REPO -->
+      <section id="tab-repo" class="hidden h-full flex overflow-hidden">
+
+        <!-- Left Code Nav -->
+        <div class="w-1/4 h-full bg-slate-950 border-r border-slate-850 p-4 space-y-4">
+          <div>
+            <h3 class="text-white font-bold text-sm tracking-wide">SOURCE FILE EXPLORER</h3>
+            <p class="text-xs text-slate-400">Browse the live generated workspace package</p>
+          </div>
+
+          <div class="space-y-1">
+            <div class="text-xs font-semibold text-slate-400 px-2 py-1 flex items-center gap-1.5">
+              <i class="bi bi-folder-fill text-amber-500"></i> qa_agent_factory/
+            </div>
+            <div class="pl-4 space-y-1">
+              <div class="text-xs font-semibold text-slate-400 py-1 flex items-center gap-1.5">
+                <i class="bi bi-folder-fill text-amber-500"></i> src/
+              </div>
+              <div class="pl-4 space-y-0.5">
+                <button id="code-btn-compliance"
+                  class="w-full text-left text-xs px-2.5 py-1.5 rounded hover:bg-slate-800 hover:text-white transition-all text-slate-300"
+                  onclick="viewRepoCode('compliance')">
+                  <i class="bi bi-filetype-py mr-2 text-sky-400"></i> compliance.py
+                </button>
+                <button id="code-btn-factory"
+                  class="w-full text-left text-xs px-2.5 py-1.5 rounded hover:bg-slate-800 hover:text-white transition-all text-slate-300"
+                  onclick="viewRepoCode('factory')">
+                  <i class="bi bi-filetype-py mr-2 text-sky-400"></i> factory.py
+                </button>
+                <button id="code-btn-orchestrator"
+                  class="w-full text-left text-xs px-2.5 py-1.5 rounded hover:bg-slate-800 hover:text-white transition-all text-slate-300"
+                  onclick="viewRepoCode('orchestrator')">
+                  <i class="bi bi-filetype-py mr-2 text-sky-400"></i> orchestrator.py
+                </button>
+                <button id="code-btn-traceability"
+                  class="w-full text-left text-xs px-2.5 py-1.5 rounded hover:bg-slate-800 hover:text-white transition-all text-slate-300"
+                  onclick="viewRepoCode('traceability')">
+                  <i class="bi bi-filetype-py mr-2 text-sky-400"></i> traceability.py
+                </button>
+                <button id="code-btn-exporter"
+                  class="w-full text-left text-xs px-2.5 py-1.5 rounded hover:bg-slate-800 hover:text-white transition-all text-slate-300"
+                  onclick="viewRepoCode('exporter')">
+                  <i class="bi bi-filetype-py mr-2 text-sky-400"></i> exporter.py
+                </button>
+                <button id="code-btn-demo"
+                  class="w-full text-left text-xs px-2.5 py-1.5 rounded hover:bg-slate-800 hover:text-white transition-all text-slate-300"
+                  onclick="viewRepoCode('demo')">
+                  <i class="bi bi-filetype-py mr-2 text-emerald-400"></i> demo.py
+                </button>
+              </div>
+              <button id="code-btn-blueprint"
+                class="w-full text-left text-xs px-2.5 py-1.5 rounded hover:bg-slate-800 hover:text-white transition-all text-slate-300"
+                onclick="viewRepoCode('blueprint')">
+                <i class="bi bi-filetype-md mr-2 text-purple-400"></i> ARCH_BLUEPRINT.md
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Code Viewer Area -->
+        <div class="w-3/4 h-full bg-slate-900 flex flex-col overflow-hidden">
+
+          <!-- File Viewer Header -->
+          <div class="px-5 py-3 border-b border-slate-800 bg-slate-900 flex justify-between items-center shrink-0">
+            <div class="flex items-center gap-2">
+              <i class="bi bi-file-code-fill text-teal-400 text-lg"></i>
+              <span id="repo-filepath"
+                class="text-xs font-bold text-white term-log">/home/user/qa_agent_factory/src/compliance.py</span>
+            </div>
+            <button
+              class="px-3 py-1 bg-slate-950 border border-slate-800 text-[10px] text-slate-300 hover:text-white rounded-md cursor-pointer flex items-center gap-1.5"
+              onclick="copyRepoCode()">
+              <i class="bi bi-clipboard"></i> Copy File
+            </button>
+          </div>
+
+          <!-- Code Viewer Pre -->
+          <div class="flex-1 overflow-auto p-6 bg-slate-950">
+            <pre class="text-xs text-slate-200 term-log whitespace-pre" id="repo-code-viewer"></pre>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- TAB 4: KNOWLEDGE BASE -->
+      <section id="tab-knowledgebase" class="hidden h-full flex overflow-hidden">
+
+        <!-- Left: Controls Panel -->
+        <div
+          class="w-2/5 h-full bg-slate-950 border-r border-slate-850 flex flex-col overflow-y-auto px-6 py-4 space-y-5">
+
+          <div>
+            <h3 class="text-white font-bold text-sm tracking-wide">PROJECT KNOWLEDGE BASE</h3>
+            <p class="text-xs text-slate-400">Ingest source documents and search project context</p>
+          </div>
+
+          <!-- Project Selector -->
+          <div class="space-y-1.5">
+            <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Select Project</label>
+            <select id="kb-project-select"
+              class="w-full bg-slate-900 border border-slate-800 rounded p-2 text-xs text-slate-200"
+              onchange="kbProjectChanged()">
+              <option value="">Loading projects...</option>
+            </select>
+          </div>
+
+          <!-- Source Type Selector -->
+          <div class="space-y-1.5">
+            <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Source Type</label>
+            <select id="kb-source-select"
+              class="w-full bg-slate-900 border border-slate-800 rounded p-2 text-xs text-slate-200">
+              <option value="">Loading source types...</option>
+            </select>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex gap-3">
+            <button id="kb-ingest-btn"
+              class="flex-1 bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold py-2.5 rounded-lg text-xs tracking-wider uppercase transition-all shadow-lg shadow-teal-500/10 cursor-pointer"
+              onclick="kbIngest()">
+              <i class="bi bi-cloud-upload mr-1.5"></i> Ingest
+            </button>
+            <button id="kb-search-btn"
+              class="flex-1 bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2.5 rounded-lg text-xs tracking-wider uppercase transition-all shadow-lg shadow-cyan-600/10 cursor-pointer"
+              onclick="kbSearch()">
+              <i class="bi bi-search mr-1.5"></i> Search
+            </button>
+          </div>
+
+          <!-- Search Query -->
+          <div class="space-y-1.5">
+            <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Search Query</label>
+            <textarea id="kb-search-query" rows="3"
+              class="w-full bg-slate-900 border border-slate-800 rounded p-2 text-xs text-slate-200 resize-none"
+              placeholder="Enter a requirement, story title, or keyword to search the knowledge base..."></textarea>
+          </div>
+
+          <!-- Ingestion Status -->
+          <div class="space-y-1.5">
+            <h4 class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Ingestion Status</h4>
+            <div id="kb-ingest-status"
+              class="p-3 bg-slate-900 rounded-lg border border-slate-800 text-xs text-slate-400 term-log min-h-[60px] max-h-[200px] overflow-y-auto">
+              No ingestion run yet. Select a project and source type, then click "Ingest".
+            </div>
+          </div>
+
+          <!-- KB Stats -->
+          <div class="space-y-1.5">
+            <h4 class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Knowledge Base Stats</h4>
+            <div id="kb-stats"
+              class="p-3 bg-slate-900 rounded-lg border border-slate-800 text-xs text-slate-400 term-log">
+              Select a project to view stats.
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right: Results Preview Panel -->
+        <div class="w-3/5 h-full bg-slate-900 flex flex-col overflow-hidden">
+          <div class="px-5 py-4 border-b border-slate-800 bg-slate-900 flex justify-between items-center shrink-0">
+            <div>
+              <h3 class="text-white font-bold text-sm tracking-wide">RETRIEVAL RESULTS</h3>
+              <p id="kb-results-subtitle" class="text-xs text-slate-400">Search the knowledge base to see results here
+              </p>
+            </div>
+            <span id="kb-results-badge"
+              class="text-[9px] uppercase font-bold bg-slate-950 px-2.5 py-1 border border-slate-800 rounded text-slate-500">0
+              RESULTS</span>
+          </div>
+          <div id="kb-results-container" class="flex-1 overflow-y-auto p-5 space-y-3 text-xs">
+            <div class="text-slate-500 text-center py-12">
+              <i class="bi bi-database text-4xl mb-3 block text-slate-700"></i>
+              <p>Run a search query to retrieve relevant knowledge chunks with confidence scores and source references.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer
+      class="px-6 py-2 border-t border-slate-800 bg-slate-900/60 flex items-center justify-between text-[11px] text-slate-500 shrink-0">
+      <div>Enterprise Security Status: <span class="text-emerald-400"><i class="bi bi-shield-check-fill"></i> Secure
+          Local Sandboxed</span></div>
+      <div>Designed for: Farrukh Khan (f.tuheedkhan@gmail.com) — Powered by Farrukh Khan</div>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
