@@ -1,35 +1,99 @@
-# QA Agent Factory & Project Knowledge Base
+# QA Agent Factory v2.0
 
-An enterprise-grade, privacy-safe, local-first test automation and requirement engineering suite. The system dynamically instantiates specialized agents based on JSON definitions, maintains a bi-directional traceability matrix, enforces compliance (in-flight PII masking), and compiles comprehensive, beautifully formatted multi-sheet Excel test suites.
+An enterprise-grade, privacy-safe, local-first AI test case generation platform.
+Upload your requirements, API specs, or existing test cases — the system automatically ingests them, retrieves the right context, generates test scenarios, writes executable test cases, runs a QA audit, computes traceability, and delivers a formatted Excel workbook.
 
-This repository features both the **Core Python Execution Engine** and a **Modern Interactive Web Dashboard**.
+**All of this happens behind a single "Generate" button.**
 
 ---
 
-## 🏗️ System Architecture
+## ✨ User Workflow
 
 ```
-                       [ Project Knowledge Base (Jira/APIs/Docs) ]
-                                          │
-                                +-------------------+
-                                |  Compliance Guard | <--- (PII Scrubbing, Local Cache)
-                                +-------------------+
-                                          │
-                                +-------------------+
-                                |   Agent Factory   | <--- (Loads JSON definitions,
-                                +-------------------+       compiles prompts & tools)
-                                          │
-                 +-------------------------------------------------+
-                 |         QA State Graph Orchestrator             |
-                 +-------------------------------------------------+
-                 |                                                 |
-                 |  [Retrieve] ➔ [Scenarios] ➔ [Test Generator]     |
-                 |                                     │           |
-                 |   [Traceability] ☝  [Export] <--- [Reviewer] ┘ |
-                 |         (100% Coverage Audit & Loopback)        |
-                 +-------------------------------------------------+
-                                          │
-                              [ Structured XLSX Export ]
+Create Project → Upload Files → Generate Test Cases → Download Output
+```
+
+1. **Create Project** — Name your project. Every project is fully isolated.
+2. **Upload Files** — Drop in `.md`, `.txt`, `.yaml`, `.yml`, or `.json` files.  
+   Files are auto-detected (User Stories / API Specs / Test Cases) and instantly indexed.
+3. **Generate Test Cases** — Describe the feature or user story. Click Generate.  
+   The pipeline runs automatically: context retrieval → scenarios → test cases → QA review → traceability.
+4. **Download** — Get a formatted multi-sheet `.xlsx` workbook or raw `.json`.
+
+No manual ingestion. No CLI commands. No API calls.
+
+---
+
+## 🚀 Running the Application
+
+### Option A: Python (Recommended for local use)
+
+**Prerequisites:**
+- Python 3.10+
+- [Ollama](https://ollama.com/) (free, local LLM) **OR** an OpenAI API key
+
+**1. Install dependencies:**
+```bash
+pip install -r requirements.txt
+```
+
+**2. Configure an LLM backend (choose one):**
+
+*Option A1 — Ollama (local, no cost, no cloud)*
+```bash
+# Install Ollama: https://ollama.com
+ollama pull qwen2.5-coder:7b
+ollama serve
+```
+
+*Option A2 — OpenAI*
+```bash
+# Windows
+set OPENAI_API_KEY=sk-...
+# macOS/Linux
+export OPENAI_API_KEY=sk-...
+```
+
+**3. Start the application:**
+```bash
+python run.py
+```
+Open **http://localhost:8000** in your browser.
+
+---
+
+### Option B: Windows Batch Script
+```bat
+start.bat
+```
+
+### Option C: Linux / macOS Shell Script
+```bash
+chmod +x startup.sh && ./startup.sh
+```
+
+---
+
+### Option D: Docker (Zero-configuration deployment)
+
+**Requirements:** Docker Desktop or Docker Engine + Docker Compose
+
+```bash
+docker compose up --build
+```
+
+This starts:
+- **QA Agent Factory** on `http://localhost:8000`
+- **Ollama** LLM server on `http://localhost:11434` (auto-downloads on first use)
+
+**To pull the LLM model after startup:**
+```bash
+docker exec qa-ollama ollama pull qwen2.5-coder:7b
+```
+
+**To use OpenAI instead of Ollama:**
+```bash
+OPENAI_API_KEY=sk-... docker compose up --build
 ```
 
 ---
@@ -38,96 +102,87 @@ This repository features both the **Core Python Execution Engine** and a **Moder
 
 ```
 ai_agent_code/
-├── README.md                      # This documentation
-├── .gitignore                     # Git exclusion rules
-├── kb_server.py                   # Knowledge Base Local HTTP API Server
-├── demo.py                        # Executable pipeline CLI simulation
-├── test_kb_pipeline.py            # Integration test script for the KB pipeline
-├── dashboard/                     # HTML/JS/CSS Interactive Web Dashboard
-│   ├── index.html                 # Dashboard layout
-│   ├── app.js                     # Interactive logic & KB API connectors
-│   ├── styles.css                 # Custom glassmorphic CSS styling
-│   └── bootstrap-icons.min.css    # UI Icons
-├── projects/                      # Project-specific Knowledge Bases
-│   └── sample_project/
-│       ├── project_config.yaml    # Knowledge source configuration (YAML)
-│       ├── sources/               # Raw document directories
-│       │   ├── user_stories/
-│       │   ├── api_specs/
-│       │   └── existing_test_cases_defects/
-│       └── store/
-│           └── vectors.json       # In-memory/disk local vector store
-└── src/                           # Python backend modules
-    ├── compliance.py              # PII masking (ComplianceGuard) & Semantic Cache
-    ├── factory.py                 # Dynamic Agent compiler & registry
-    ├── orchestrator.py            # DAG execution loops with self-healing
-    ├── traceability.py            # Bi-directional mapping and coverage score
-    ├── exporter.py                # Styled XLSX exporter with openpyxl
-    └── knowledge_base/            # Project Knowledge Base (PKB) engine
-        ├── models.py              # Ingestion/Retrieval dataclasses & SourceType enum
-        ├── project_loader.py      # Project YAML loading & directory scaffolding
-        ├── chunker.py             # Semantic splitting (Stories, APIs, Test Cases)
-        ├── embeddings.py          # Local-first Embeddings (no cloud dependency)
-        ├── vector_store.py        # File-backed Vector DB with cosine similarity
-        ├── ingest.py              # Ingestion pipeline controller
-        └── retriever.py           # Semantic Search & Context retriever
+├── app.py                    ← FastAPI application (API + static serving)
+├── run.py                    ← Single entry point: python run.py
+├── Dockerfile
+├── docker-compose.yml
+├── startup.sh                ← Linux/macOS launcher
+├── start.bat                 ← Windows launcher
+├── requirements.txt
+├── static/                   ← Frontend (served by FastAPI)
+│   ├── index.html            ← 4-step wizard UI
+│   ├── app.js                ← Frontend logic
+│   └── styles.css            ← Premium dark theme
+├── projects/                 ← Per-project isolated storage (auto-created)
+│   └── {project_id}/
+│       ├── project.json      ← Project metadata
+│       ├── sources/          ← Uploaded files (by source type)
+│       ├── store/            ← Local vector index
+│       └── results/          ← latest.xlsx + latest.json
+└── src/                      ← Python backend modules
+    ├── llm.py                ← LLM adapter (Ollama / OpenAI)
+    ├── pipeline.py           ← Full QA pipeline (no mocks)
+    ├── compliance.py         ← PII masking (ComplianceGuard)
+    ├── traceability.py       ← Bi-directional coverage matrix
+    ├── exporter.py           ← XLSX exporter (openpyxl)
+    └── knowledge_base/       ← KB ingestion & retrieval engine
+        ├── models.py
+        ├── project_loader.py
+        ├── chunker.py
+        ├── embeddings.py
+        ├── vector_store.py
+        ├── ingest.py
+        └── retriever.py
 ```
 
 ---
 
-## ⚙️ Core Modules & Features
+## ⚙️ Environment Variables
 
-### 1. In-Flight Compliance Proxy (`ComplianceGuard`)
-* **Dual-Way Masking:** Automatically detects and replaces sensitive information (emails, credentials, API keys, database connection strings, IPs) in prompts with reversible tokens (`__SAFE_EMAIL_0__`).
-* **Post-Execution Reconstruction:** The LLM's response is scrubbed, and the original variables are restored locally, keeping your workspace compliant (SOC2-CC6.1/ISO27001).
-* **Local Semantic Cache:** Prompt hashes are evaluated locally to return instant cached responses for identical requests, optimizing resource usage.
-
-### 2. Project Knowledge Base (PKB)
-* **Local Ingestion & Scaffolding:** Create structured data repositories for any project using standard YAML configs.
-* **Semantic Chunking:** Custom splitting rules separate User Stories, OpenAPI/Swagger specifications, and Test Case/Defect logs into semantic units.
-* **Embeddings & Vector Store:** Integrates local sentence-transformers (falls back to a zero-dependency deterministic hash embedding if unavailable). Runs entirely offline.
-* **Context Assembly:** Translates target user stories into semantic queries to build an enriched context prompt for the test generator.
-
-### 3. Dynamic Agent Factory
-* No hardcoded agent classes. Agents are dynamically registered and compiled via JSON configurations specifying role, system prompt template, model, and temperature.
-* Custom validation schemas ensure agents emit structured outputs.
-
-### 4. DAG State Graph & Self-Healing
-* Orchestrates execution steps.
-* Features a **Quality Loopback:** The `QA Reviewer` inspects generated test suites. If coverage or compliance gaps are identified, it triggers self-correction loops with remedial feedback to the `Test Case Generator`.
-
-### 5. Traceability & Reporting
-* **Traceability Matrix:** Maps requirements to test cases. Calculates coverage percentage.
-* **Professional XLSX Export:** Emits structured sheets formatted with clean Segoe UI typography, charcoal headers, auto-fit columns, and cell borders.
+| Variable | Default | Description |
+|---|---|---|
+| `OPENAI_API_KEY` | _(unset)_ | Set to use OpenAI backend. If set, Ollama is ignored. |
+| `OPENAI_MODEL` | `gpt-4o-mini` | OpenAI model name |
+| `OLLAMA_HOST` | `http://localhost:11434` | Ollama server URL |
+| `OLLAMA_MODEL` | `qwen2.5-coder:7b` | Ollama model name |
+| `PORT` | `8000` | HTTP port to bind |
+| `HOST` | `0.0.0.0` | Bind address |
+| `LLM_TIMEOUT` | `120` | LLM request timeout in seconds |
 
 ---
 
-## 🚀 Running the System Locally
+## 🔌 REST API Reference
 
-### Prerequisites
-Install the required Python dependencies:
-```bash
-pip install pandas openpyxl jinja2 pyyaml
-```
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/health` | Health check + LLM backend status |
+| POST | `/api/projects` | Create a new project |
+| GET | `/api/projects` | List all projects |
+| GET | `/api/projects/{id}` | Get project metadata |
+| POST | `/api/projects/{id}/upload` | Upload file (auto-ingests) |
+| GET | `/api/projects/{id}/files` | List uploaded files |
+| POST | `/api/projects/{id}/generate` | Run full QA pipeline |
+| GET | `/api/projects/{id}/results` | Get last pipeline results |
+| GET | `/api/projects/{id}/download/xlsx` | Download Excel workbook |
+| GET | `/api/projects/{id}/download/json` | Download JSON results |
 
-### Option A: Run the CLI Simulation (Standard Demo)
-Execute the master simulation showing dynamic agent instantiation, loopbacks, masking, and Excel export:
-```bash
-python demo.py
-```
-*Outputs `MFA_Test_Suite_Export.xlsx` on completion.*
+---
 
-### Option B: Run the Project Knowledge Base Pipeline
-Ingest and query project documents using the test script:
-```bash
-python test_kb_pipeline.py
-```
+## 🔒 Privacy & Compliance
 
-### Option C: Run the Interactive Web Dashboard
-1. Start the local Knowledge Base HTTP server:
-   ```bash
-   python kb_server.py
-   ```
-2. Open the dashboard by double-clicking `dashboard/index.html` in any browser.
-3. Switch to the **Knowledge Base** tab to ingest files, query the vector database, view stats, and inspect search results.
-4. Go to the **Interactive Factory Simulator** tab to execute the complete agent workflow and download the styled XLSX spreadsheet.
+- **Local-first by default.** With Ollama, no data ever leaves your machine.
+- **In-flight PII masking.** The `ComplianceGuard` scrubs emails, IPs, passwords, and API keys from prompts before sending to any LLM backend. Original values are restored locally after the response.
+- **Air-gap compatible.** Works fully offline with Ollama.
+- **Project isolation.** Every project's data, files, and vector index are stored in a separate directory.
+
+---
+
+## 📋 Supported File Types
+
+| File | Auto-detected as |
+|---|---|
+| `.md`, `.txt` with "As a user", "Given/When/Then" | User Stories |
+| `.yaml`, `.yml`, `.json` with "openapi:", "paths:" | API Specifications |
+| `.md`, `.txt` with "TC-", "Test Case", "Precondition" | Existing Test Cases & Defects |
+| Other `.md`, `.txt` | User Stories (default) |
+| Other `.yaml`, `.yml` | API Specifications (default) |

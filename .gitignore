@@ -8,8 +8,8 @@ __pycache__/
 .pytest_cache/
 
 # Local Vector DB data (optional, but keep sample project vector data clean)
-projects/*/store/*.json
-!projects/sample_project/store/vectors.json
+projects/*
+!projects/sample_project/
 
 # Exported Excel sheets
 *.xlsx

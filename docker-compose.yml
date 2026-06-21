@@ -1,0 +1,54 @@
+version: "3.9"
+
+services:
+
+  # ── QA Agent Factory Web Application ─────────────────────────────────────
+  app:
+    build: .
+    container_name: qa-agent-factory
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      # Persist project data outside the container
+      - ./projects:/app/projects
+    environment:
+      # ── LLM Backend (choose one) ─────────────────────────────────────────
+      # Option A: Ollama (default — uses the ollama sidecar below)
+      - OLLAMA_HOST=${OLLAMA_HOST:-http://ollama:11434}
+      - OLLAMA_MODEL=${OLLAMA_MODEL:-qwen2.5-coder:7b}
+      # Option B: OpenAI (set OPENAI_API_KEY to switch backends automatically)
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-4o-mini}
+      # ── Server settings ───────────────────────────────────────────────────
+      - HOST=0.0.0.0
+      - PORT=8000
+    depends_on:
+      - ollama
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ── Ollama Local LLM Server ───────────────────────────────────────────────
+  # Remove this service if using OpenAI instead.
+  ollama:
+    image: ollama/ollama:latest
+    container_name: qa-ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    # Uncomment for GPU acceleration (requires nvidia-container-toolkit):
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
+
+volumes:
+  ollama_data:

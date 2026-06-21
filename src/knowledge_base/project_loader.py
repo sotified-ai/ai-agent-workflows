@@ -137,6 +137,13 @@ class ProjectLoader:
                 ids.append(child.name)
         return ids
 
+    def load_or_scaffold(self, project_id: str, project_name: str = "") -> ProjectConfig:
+        """Load a project config, scaffolding it first if it doesn't exist."""
+        config_path = self.projects_dir / project_id / "project_config.yaml"
+        if not config_path.exists():
+            self.scaffold_project(project_id, project_name)
+        return self.load_project(project_id)
+
     def load_all_projects(self) -> Dict[str, ProjectConfig]:
         """Load every discovered project into a dict keyed by project_id."""
         result: Dict[str, ProjectConfig] = {}
