@@ -92,7 +92,7 @@ function renderProjectsList() {
 
   list.innerHTML = projectsData.map(p => `
     <div class="project-item ${currentProject?.project_id === p.project_id ? 'selected' : ''}"
-         onclick="selectProject(${JSON.stringify(p).replace(/"/g, '&quot;')})">
+         onclick="selectProjectById('${p.project_id}')">
       <div>
         <div class="proj-name">${esc(p.name)}</div>
         <div class="proj-meta">${esc(p.description || '—')} &nbsp;·&nbsp; ${p.file_count || 0} files</div>
@@ -100,6 +100,13 @@ function renderProjectsList() {
       <span class="proj-arrow">→</span>
     </div>
   `).join('');
+}
+
+function selectProjectById(id) {
+  const p = projectsData.find(x => x.project_id === id);
+  if (p) {
+    selectProject(p);
+  }
 }
 
 function selectProject(p) {
